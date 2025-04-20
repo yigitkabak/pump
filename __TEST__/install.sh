@@ -55,20 +55,13 @@ if [ -w "/usr/local/bin" ]; then
 else
     INSTALL_DIR="$HOME/.local/bin"
     mkdir -p "$INSTALL_DIR"
-
+    
+    # Otomatik PATH'e ekle
     if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
         echo -e "${YELLOW}PATH'e $INSTALL_DIR ekleniyor...${NC}"
-        if [ -f "$HOME/.bashrc" ]; then
-            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
-            echo -e "${YELLOW}.bashrc güncellendi (kaynak için: source ~/.bashrc)${NC}"
-        elif [ -f "$HOME/.zshrc" ]; then
-            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
-            echo -e "${YELLOW}.zshrc güncellendi (kaynak için: source ~/.zshrc)${NC}"
-        else
-            echo -e "${RED}.bashrc veya .zshrc bulunamadı.${NC}"
-            echo -e "${YELLOW}PATH değişkenine şu satırı ekle:${NC}"
-            echo -e "export PATH=\"$HOME/.local/bin:\$PATH\""
-        fi
+        echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.profile"
+        export PATH="$HOME/.local/bin:$PATH"
+        echo -e "${GREEN}✓ PATH güncellendi ve geçerli oturuma eklendi${NC}"
     fi
 fi
 
@@ -87,14 +80,9 @@ echo -e "${GREEN}✓ Temizlik tamamlandı${NC}"
 # Bilgilendirme
 echo -e "\n${GREEN}${BOLD}=== Kurulum Tamamlandı! ===${NC}"
 echo -e "Artık ${BOLD}pump${NC} komutunu istediğin yerden kullanabilirsin."
-echo -e "\n${YELLOW}Örnek kullanım:${NC}"
+echo -e "\n${YELLOW}Örnek komutlar:${NC}"
 echo -e "  pump help"
 echo -e "  pump init"
 echo -e "  pump install express"
-
-if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
-    echo -e "\n${YELLOW}NOT: Bu oturumda kullanmak için PATH'e ekle:${NC}"
-    echo -e "  export PATH=\"$INSTALL_DIR:\$PATH\""
-fi
 
 echo -e "\n${BLUE}${BOLD}Keyifli kodlamalar! 🚀${NC}"
