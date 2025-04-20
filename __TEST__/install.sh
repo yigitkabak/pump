@@ -29,8 +29,8 @@ cd "$TEMP_DIR" || exit 1
 
 # Repo klonla
 echo -e "${YELLOW}Pump CLI reposu klonlanıyor...${NC}"
-git clone https://github.com/yigitkabak/pump/__TEST__.git pump
-cd pump || exit 1
+git clone https://github.com/yigitkabak/pump.git pump
+cd pump/__TEST__ || exit 1
 echo -e "${GREEN}✓ Repo klonlandı${NC}"
 
 # Go modülü kontrol et
