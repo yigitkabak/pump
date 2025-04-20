@@ -23,6 +23,11 @@ const (
 func main() {
 	args := os.Args[1:]
 
+	// Termux fix: Eğer args içinde kendi binary path'in çıkmışsa temizle
+	if len(args) == 1 && strings.Contains(args[0], "/pump") {
+		args = []string{}
+	}
+
 	if len(args) == 0 {
 		printHelp()
 		os.Exit(0)
@@ -37,7 +42,7 @@ func main() {
 
 	case "install", "i":
 		if len(args) < 2 {
-			fmt.Printf("%s❌ Error: Please specify the package name to install.%s\n", colorRed, colorReset)
+			fmt.Printf("%s❌ Hata: Kurulacak paket ismini belirtmelisin.%s\n", colorRed, colorReset)
 			os.Exit(1)
 		}
 		packageToInstall := args[1]
@@ -50,22 +55,17 @@ func main() {
 		createModFile()
 
 	default:
-		fmt.Printf("%s❌ Error: Invalid command \"%s\"! Use \"pump help\" for usage information.%s\n", colorRed, args[0], colorReset)
+		fmt.Printf("%s❌ Geçersiz komut \"%s\"! Yardım için: pump help%s\n", colorRed, args[0], colorReset)
 		os.Exit(1)
 	}
 }
 
-func printUsage() {
-	fmt.Printf("%sUsage:%s pump install <package-name>\n\n", colorYellow, colorReset)
-	fmt.Printf("%sPump - A simple npm package installer.%s\n", colorBold, colorReset)
-}
-
 func printHelp() {
 	fmt.Printf("\n%s%s📖 PUMP KOMUT REHBERİ%s\n\n", colorBold, colorBlue, colorReset)
-	fmt.Printf("%s ➜ %spump install <modül>%s %s# Yeni bir modül kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
-	fmt.Printf("%s ➜ %spump i <modül>%s %s# install için kısa yol.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
-	fmt.Printf("%s ➜ %spump mod%s %s# mod.npr içindeki tüm modülleri kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
-	fmt.Printf("%s ➜ %spump init%s %s# Boş bir mod.npr dosyası oluşturur.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
+	fmt.Printf("%s ➜ %spump install <paket>%s %s# Belirtilen npm paketini kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
+	fmt.Printf("%s ➜ %spump i <paket>%s %s# install için kısa yazım.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
+	fmt.Printf("%s ➜ %spump mod%s %s# mod.npr dosyasındaki tüm paketleri kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
+	fmt.Printf("%s ➜ %spump init%s %s# mod.npr dosyası oluşturur.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 	fmt.Printf("%s ➜ %spump version%s %s# Versiyonu gösterir.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 	fmt.Printf("%s ➜ %spump help%s %s# Yardım menüsünü gösterir.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 }
@@ -74,8 +74,8 @@ func installPackage(packageName string) bool {
 	fmt.Printf("%s🔍 Paket indiriliyor: %s...%s\n", colorCyan, packageName, colorReset)
 
 	cmd := exec.Command("npm", "install", packageName, "--silent")
-	cmd.Stderr = nil // Hataları bastır
-	cmd.Stdout = nil // Çıktıyı bastır
+	cmd.Stderr = nil
+	cmd.Stdout = nil
 
 	err := cmd.Run()
 	if err != nil {
@@ -98,7 +98,7 @@ func installFromModFile() {
 
 	file, err := os.Open(modFilePath)
 	if err != nil {
-		fmt.Printf("%s❌ mod.npr dosyası okunamadı: %s%s\n", colorRed, err.Error(), colorReset)
+		fmt.Printf("%s❌ Dosya okunamadı: %s%s\n", colorRed, err.Error(), colorReset)
 		os.Exit(1)
 	}
 	defer file.Close()
@@ -118,11 +118,11 @@ func installFromModFile() {
 	}
 
 	if len(modules) == 0 {
-		fmt.Printf("%s⚠️ mod.npr içinde kuracak modül bulunamadı.%s\n", colorYellow, colorReset)
+		fmt.Printf("%s⚠️ mod.npr içinde kuracak modül yok.%s\n", colorYellow, colorReset)
 		os.Exit(0)
 	}
 
-	fmt.Printf("%s📦 %d modül bulundu. Kurulum başlatılıyor...%s\n", colorBlue, len(modules), colorReset)
+	fmt.Printf("%s📦 %d modül bulundu. Kurulum başlıyor...%s\n", colorBlue, len(modules), colorReset)
 
 	successCount := 0
 	failCount := 0
@@ -136,9 +136,9 @@ func installFromModFile() {
 	}
 
 	fmt.Printf("\n%s📊 Kurulum Özeti:%s\n", colorBold, colorReset)
-	fmt.Printf("%s✅ Başarıyla kurulan: %d modül%s\n", colorGreen, successCount, colorReset)
+	fmt.Printf("%s✅ Başarılı: %d%s\n", colorGreen, successCount, colorReset)
 	if failCount > 0 {
-		fmt.Printf("%s❌ Kurulamayan: %d modül%s\n", colorRed, failCount, colorReset)
+		fmt.Printf("%s❌ Başarısız: %d%s\n", colorRed, failCount, colorReset)
 	}
 }
 
@@ -146,19 +146,19 @@ func createModFile() {
 	modFilePath := "mod.npr"
 
 	if _, err := os.Stat(modFilePath); err == nil {
-		fmt.Printf("%s⚠️ mod.npr zaten var.%s\n", colorYellow, colorReset)
+		fmt.Printf("%s⚠️ mod.npr zaten mevcut.%s\n", colorYellow, colorReset)
 		return
 	}
 
 	file, err := os.Create(modFilePath)
 	if err != nil {
-		fmt.Printf("%s❌ mod.npr oluşturulamadı: %s%s\n", colorRed, err.Error(), colorReset)
+		fmt.Printf("%s❌ Dosya oluşturulamadı: %s%s\n", colorRed, err.Error(), colorReset)
 		os.Exit(1)
 	}
 	defer file.Close()
 
 	content := `# Pump Modül Listesi
-# Aşağıya her satıra bir npm paketi yaz.
+# Her satıra bir npm paketi ekle
 # Örnek:
 # react
 # express
@@ -166,7 +166,7 @@ func createModFile() {
 
 	_, err = file.WriteString(content)
 	if err != nil {
-		fmt.Printf("%s❌ mod.npr dosyasına yazılamadı: %s%s\n", colorRed, err.Error(), colorReset)
+		fmt.Printf("%s❌ Dosyaya yazılamadı: %s%s\n", colorRed, err.Error(), colorReset)
 		os.Exit(1)
 	}
 
