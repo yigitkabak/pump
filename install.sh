@@ -10,6 +10,7 @@ BOLD='\033[1m'
 
 echo -e "${BLUE}${BOLD}========================================${NC}"
 echo -e "${BLUE}${BOLD}    Pump CLI Installation Script        ${NC}"
+echo -e "${BLUE}${BOLD}        (.pmp Mod File Support)         ${NC}"
 echo -e "${BLUE}${BOLD}========================================${NC}"
 
 # Check if Go is installed
@@ -88,8 +89,9 @@ echo -e "\n${GREEN}${BOLD}=== Installation Complete! ===${NC}"
 echo -e "You can now use the ${BOLD}pump${NC} command from anywhere."
 echo -e "\n${YELLOW}Test it out with:${NC}"
 echo -e "  pump help"
-echo -e "  pump init"
-echo -e "  pump install react"
+echo -e "  pump init   ${GRAY}(creates mod.pmp file)${NC}"
+echo -e "  pump mod    ${GRAY}(installs from mod.pmp)${NC}"
+echo -e "  pump install <paket>"
 
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
     echo -e "\n${YELLOW}NOTE: You may need to restart your terminal or run:${NC}"
@@ -97,4 +99,4 @@ if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
     echo -e "to use the ${BOLD}pump${NC} command in this session."
 fi
 
-echo -e "\n${BLUE}${BOLD}Happy coding!${NC}"
+echo -e "\n${BLUE}${BOLD}Happy coding with .pmp! 🚀${NC}"
