@@ -64,8 +64,8 @@ func printHelp() {
 	fmt.Printf("\n%s%s📖 PUMP KOMUT REHBERİ%s\n\n", colorBold, colorBlue, colorReset)
 	fmt.Printf("%s ➜ %spump install <paket>%s %s# Belirtilen npm paketini kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 	fmt.Printf("%s ➜ %spump i <paket>%s %s# install için kısa yazım.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
-	fmt.Printf("%s ➜ %spump mod%s %s# mod.npr dosyasındaki tüm paketleri kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
-	fmt.Printf("%s ➜ %spump init%s %s# mod.npr dosyası oluşturur.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
+	fmt.Printf("%s ➜ %spump mod%s %s# mod.pmp dosyasındaki tüm paketleri kurar.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
+	fmt.Printf("%s ➜ %spump init%s %s# mod.pmp dosyası oluşturur.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 	fmt.Printf("%s ➜ %spump version%s %s# Versiyonu gösterir.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 	fmt.Printf("%s ➜ %spump help%s %s# Yardım menüsünü gösterir.%s\n", colorYellow, colorCyan, colorReset, colorGray, colorReset)
 }
@@ -88,10 +88,10 @@ func installPackage(packageName string) bool {
 }
 
 func installFromModFile() {
-	modFilePath := "mod.npr"
+	modFilePath := "mod.pmp"
 
 	if _, err := os.Stat(modFilePath); os.IsNotExist(err) {
-		fmt.Printf("%s❌ Hata: mod.npr dosyası bulunamadı.%s\n", colorRed, colorReset)
+		fmt.Printf("%s❌ Hata: mod.pmp dosyası bulunamadı.%s\n", colorRed, colorReset)
 		fmt.Printf("Şu komutla oluşturabilirsin: %spump init%s\n", colorCyan, colorReset)
 		os.Exit(1)
 	}
@@ -118,7 +118,7 @@ func installFromModFile() {
 	}
 
 	if len(modules) == 0 {
-		fmt.Printf("%s⚠️ mod.npr içinde kuracak modül yok.%s\n", colorYellow, colorReset)
+		fmt.Printf("%s⚠️ mod.pmp içinde kuracak modül yok.%s\n", colorYellow, colorReset)
 		os.Exit(0)
 	}
 
@@ -143,10 +143,10 @@ func installFromModFile() {
 }
 
 func createModFile() {
-	modFilePath := "mod.npr"
+	modFilePath := "mod.pmp"
 
 	if _, err := os.Stat(modFilePath); err == nil {
-		fmt.Printf("%s⚠️ mod.npr zaten mevcut.%s\n", colorYellow, colorReset)
+		fmt.Printf("%s⚠️ mod.pmp zaten mevcut.%s\n", colorYellow, colorReset)
 		return
 	}
 
@@ -170,5 +170,5 @@ func createModFile() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s✅ mod.npr başarıyla oluşturuldu.%s\n", colorGreen, colorReset)
+	fmt.Printf("%s✅ mod.pmp başarıyla oluşturuldu.%s\n", colorGreen, colorReset)
 }
