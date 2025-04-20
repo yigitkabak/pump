@@ -29,7 +29,7 @@ cd "$TEMP_DIR" || exit 1
 
 # Clone the Pump CLI GitHub repository
 echo -e "${YELLOW}Cloning Pump CLI repository...${NC}"
-git clone https://github.com/your-username/pump-cli.git pump
+git clone https://github.com/yigitkabak/pump.git pump
 cd pump || exit 1
 echo -e "${GREEN}✓ Repository cloned${NC}"
 
